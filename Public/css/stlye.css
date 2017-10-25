@@ -114,6 +114,14 @@ body {
 #beginPage #btnContainer .startBtn {
   margin-bottom: 7%;
 }
+.swipe_tips {
+  font-size: 10px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  top: -6px;
+  color: #f69c4a;
+}
 #backPage .copyright {
   float: left;
 }
@@ -121,6 +129,8 @@ body {
   list-style: none;
   overflow: hidden;
   width: 100%;
+  position: absolute;
+  top: 0;
 }
 #backPage .courseList li {
   float: left;
@@ -232,34 +242,63 @@ body {
   border-radius: 20px;
   box-shadow: 0 5px 5px #f9efc3;
 }
+#backPage .background_content .touchBar {
+  width: 100%;
+  height: 99%;
+  overflow: hidden;
+  position: relative;
+  top: -6px;
+}
+#gamePage .swipe_tips {
+  margin-top: 6px;
+}
+#gamePage .courseNum {
+  background: url("../images/courseNum.png") no-repeat center;
+  background-size: 100% 100%;
+  float: left;
+  margin-top: 5%;
+  height: 100px;
+  width: 38.13%;
+  font-family: zt;
+  color: #ffffff;
+  font-size: 32px;
+  text-align: center;
+}
 #gamePage .questionContainer {
   width: 80%;
   background: url("../images/content_back.png") center no-repeat;
   background-size: 100% 100%;
   margin: 0 auto;
-  margin-top: 12%;
+  margin-top: 26%;
   border-radius: 17px;
   box-shadow: 0 5px 3px rgba(249, 210, 145, 0.7);
   word-wrap: break-word;
   position: relative;
+  overflow: hidden;
 }
 #gamePage .questionContainer .conversation {
   padding: 5%;
   padding-top: 10%;
 }
-#gamePage .questionContainer .conversation div {
-  font-size: 13px;
-  padding: 13px;
-  color: #f69c4a;
+#gamePage .questionContainer .conversation .sentenceBox {
+  position: relative;
+  width: 90%;
+  color: #558ae0;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+#gamePage .questionContainer .conversation .sentenceBox .sentences {
+  font-size: 11px;
+  position: absolute;
+  top: 0;
 }
 #gamePage .questionContainer .conversation .Qtitle {
-  text-align: center;
-  display: inline-block;
-  width: 100%;
-  font-size: 18px;
-  font-family: tx;
-  color: #fa865e;
-  text-shadow: 1px 3px 0 #f8ddaf;
+  display: block;
+  width: 79%;
+  margin: 0 auto;
+  font-size: 14px;
+  color: #f98c33;
 }
 #gamePage .nextBtn {
   margin: 6.5% auto;

@@ -47,7 +47,7 @@ $(function () {
         })
     });
     replayBtn.on('click',function(){
-        $.mobile.changePage('#beginPage',{
+        $.mobile.changePage('#backPage',{
             transition:'flow'
         });
     });

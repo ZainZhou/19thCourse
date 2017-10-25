@@ -43,5 +43,50 @@ $(function(){
     $.mobile.loading('show');
     var Imgs = ['VoiceofYoung','background_title','card_title','copper','developer_back','developer_title','list_title','silver','studyBtn','background_back','beginXi','content_back','cup','developer_btn','gold','orange_btn','startPage_back','yellow_btn'];
     loadImgs(Imgs,showPage);
+    var touchBar = $('.courseList');
+    var touchBox = $('.touchBar');
+    var content_bar = $('.sentences');
+    var content_box = $('.sentenceBox');
+    var startPos = 0;
+    var h = $(window).width()*0.69565;
+    var h_content = 910 - $(window).width()*0.6751;
+    touchBox[0].addEventListener('touchstart',function(e){
+        e.preventDefault();
+        var touch = e.touches[0];
+        startPos = touch.pageY;
+    });
+    touchBox[0].addEventListener('touchmove',function(e){
+        e.preventDefault();
+        var touch = event.touches[0];
+        var y = (touch.pageY - startPos);
+        startTop = parseInt(touchBar.css('top'));
+        if(startTop + y >= 0){
+            touchBar.css('top',0);
+        }else if(startTop + y <= -h){
+            touchBar.css('top',-h);
+        }else{
+            touchBar.css('top',startTop+y);
+            startPos+=y;
+        }
+    });
+    content_box[0].addEventListener('touchstart',function(e){
+        e.preventDefault();
+        var touch = e.touches[0];
+        startPos = touch.pageY;
+    });
+    content_box[0].addEventListener('touchmove',function(e){
+        e.preventDefault();
+        var touch = event.touches[0];
+        var y = (touch.pageY - startPos);
+        startTop = parseInt(content_bar.css('top'));
+        if(startTop + y >= 0){
+            content_bar.css('top',0);
+        }else if(startTop + y <= -h_content){
+            content_bar.css('top',-h_content);
+        }else{
+            content_bar.css('top',startTop+y);
+            startPos+=y;
+        }
+    });
 });
 
