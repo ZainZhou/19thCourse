@@ -57,6 +57,7 @@ class IndexController extends BaseController {
     public function questions() {
 //        $isNew = I('post.new') == 'true' ? true : false;
         $lesson_id = I('post.lesson_id', 0);
+        $lesson_id = $lesson_id == 0 ? 0 : ($lesson_id - 1) * 3 + 1;
         $openid = session('openid');
         $questions = M('questions');
         $userCurrent = M('user_current_question');
@@ -64,10 +65,11 @@ class IndexController extends BaseController {
         //访问时检查是否为第二天, 重置状态
         if ($currentData['date'] != date('Y-m-d', time())) {
             $currentData['date'] = date('Y-m-d', time());
-            $currentData['time'] = time();
+            $currentData['time'] = 0;
             $currentData['current'] = 0;
             $currentData['today_group_count'] = 0;
-            $currentData['today_learn_id'] = json_encode(array());
+//            $currentData['today_learn_id'] = json_encode(array());
+//todo 全部学完重置
         }
 
         //检查学习题目上限
@@ -99,6 +101,29 @@ class IndexController extends BaseController {
         }
 
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
+
+        if ($lesson_id != 0 && count($currentData['today_learn_id']) > 0) {
+           $lastId = $currentData['today_learn_id'][count($currentData['today_learn_id']) - 1];
+           var_dump($lastId, $lesson_id);
+           $a = $lastId % 3;
+           $can = false;
+           if ($lesson_id == $lastId-1) {
+               $can = true;
+           }
+           if ($lesson_id == $lastId || $lesson_id == $lastId+1) {
+               $can = true;
+               $lesson_id += 1;
+           }
+           if (!$can){
+               $lesson_id = ($lastId - $lastId%3)/3 + 1;
+               $this->ajaxReturn(array(
+                   'status' => 403,
+                   'data' => $lesson_id,
+                   'error'   => '您不能学习该课程'
+               ));
+           }
+        }
+
 //        if ($currentData['today_learn_id']) {
 //            $map['id'] = array('NOT IN', $currentData['today_learn_id']);
 //        }
@@ -114,7 +139,9 @@ class IndexController extends BaseController {
             $currentData['question_id'] = $currentData['question_id'] + 1;
             $question = $questions->where(array('id' => $currentData['question_id']))->find();
         }
-        array_push($currentData['today_learn_id'], $question['id']);
+        if (!$this->isIdLearn($question['id'], $currentData['today_learn_id'])) {
+            array_push($currentData['today_learn_id'], $question['id']);
+        }
         $currentData['today_learn_id'] = json_encode($currentData['today_learn_id']);
         $currentData['current'] += 1;
         $current = $currentData['current'];
@@ -256,6 +283,24 @@ class IndexController extends BaseController {
         );
         $url = "http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/Api/Api/apiJsTicket";
         return $this->curl_api($url, $t2);
+    }
+
+    private function isIdLearn($id, $arr) {
+        foreach ($arr as $v) {
+            if ($id == $v) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function delId($id, $arr) {
+        foreach ($arr as &$v) {
+            if ($id == $v) {
+                unset($v);
+            }
+        }
+        return $arr;
     }
 
     public function addtestdata(){
