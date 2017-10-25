@@ -188,7 +188,7 @@ class IndexController extends BaseController {
         $offset = $from - 1 >= 0 ? $from - 1:0;
         $limit = $to - $offset;
         $users = M('users');
-        $list = $users->order('score desc')->field('nickname, imgurl, score')->limit($offset, $limit)->select();
+        $list = $users->order('days desc, score asc')->field('nickname, imgurl, score')->limit($offset, $limit)->select();
         $rank = $from;
         foreach ($list as &$v) {
             unset($v['score']);
@@ -265,10 +265,12 @@ class IndexController extends BaseController {
         for ($i=0;$i<120;$i++) {
             $openid = $string->randString();
             $score = rand(0, 100);
+            $day = rand(0, 100);
             $data1 = array(
                 'openid' => $openid,
-                'nickname' => '周老板'.$score,
-                'score' => $score
+                'nickname' => '周老板'.$day,
+                'score' => $score,
+                'days' => $day
             );
             $data2 = array(
                 'openid' => $openid
