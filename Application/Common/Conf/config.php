@@ -18,11 +18,7 @@ return array(
     */
     'DB_TYPE' => 'mysql',     // 数据库类型
     'DB_HOST' => 'localhost', // 服务器地址
-<<<<<<< HEAD
     'DB_NAME' => '19thcourse', // 数据库名
-=======
-    'DB_NAME' => '19th', // 数据库名
->>>>>>> 9a610f19adfbdf7e482ab38e34671262063124b8
     'DB_USER' => 'root',      // 用户名
     'DB_PWD' => '',    // 密码
     'DB_PORT' => '3306',     // 端口
