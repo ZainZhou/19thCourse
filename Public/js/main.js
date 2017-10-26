@@ -7,9 +7,9 @@ $(document).on("pageshow","#backPage",function(){
 $(document).on("pageshow","#listPage",function(){
     $('.beginImg').removeClass('pulse');
 });
-var question_link = "/19th/index.php/Home/Index/questions";
-var rank_link = "/19th/index.php/Home/Index/moreRank";
-var link_rank = "/19th/index.php/Home/Index/rank";
+var question_link = "/19thCourse/index.php/Home/Index/questions";
+var rank_link = "/19thCourse/index.php/Home/Index/morerank";
+var link_rank = "/19thCourse/index.php/Home/Index/rank";
 function loadImgs(b, g) {
     var f = {};
     var d = 0;
@@ -45,11 +45,8 @@ $(function(){
     loadImgs(Imgs,showPage);
     var touchBar = $('.courseList');
     var touchBox = $('.touchBar');
-    var content_bar = $('.sentences');
-    var content_box = $('.sentenceBox');
     var startPos = 0;
     var h = $(window).width()*0.69565;
-    var h_content = 910 - $(window).width()*0.6751;
     touchBox[0].addEventListener('touchstart',function(e){
         e.preventDefault();
         var touch = e.touches[0];
@@ -66,25 +63,6 @@ $(function(){
             touchBar.css('top',-h);
         }else{
             touchBar.css('top',startTop+y);
-            startPos+=y;
-        }
-    });
-    content_box[0].addEventListener('touchstart',function(e){
-        e.preventDefault();
-        var touch = e.touches[0];
-        startPos = touch.pageY;
-    });
-    content_box[0].addEventListener('touchmove',function(e){
-        e.preventDefault();
-        var touch = event.touches[0];
-        var y = (touch.pageY - startPos);
-        startTop = parseInt(content_bar.css('top'));
-        if(startTop + y >= 0){
-            content_bar.css('top',0);
-        }else if(startTop + y <= -h_content){
-            content_bar.css('top',-h_content);
-        }else{
-            content_bar.css('top',startTop+y);
             startPos+=y;
         }
     });
