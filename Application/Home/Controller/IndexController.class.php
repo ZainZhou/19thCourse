@@ -80,7 +80,7 @@ class IndexController extends BaseController {
         }
 
         //请求新题目时检查时间是否满足
-        if (time() - $currentData['time'] < 1) {
+        if (time() - $currentData['time'] < 6) {
             $this->ajaxReturn(array(
                 'status' => 403,
                 'error'   => '学习时间未满'
@@ -100,7 +100,7 @@ class IndexController extends BaseController {
                 if (!$can) {
                     $lesson_id = ($lastId - $lastId % 3) / 3 + 1;
                     $this->ajaxReturn(array(
-                        'status' => 403,
+                        'status' => 405,
                         'data' => $lesson_id,
                         'error' => '您不能学习该课程'
                     ));
