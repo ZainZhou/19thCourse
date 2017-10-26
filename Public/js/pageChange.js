@@ -2,7 +2,7 @@
  * Created by hughes on 2017/3/4.
  */
 timer = null;
-timeNum = 5;
+timeNum = 7;
 nextFlag = 0;
 current = 1;
 $(function () {
@@ -120,8 +120,8 @@ $(function () {
     });
     $('.playBtn').on('click',function(){
         clearInterval(timer);
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
         timer = setInterval(function(){
             timeNum--;
             time_content.html(timeNum+' s');
@@ -160,7 +160,7 @@ $(function () {
         }
         nextFlag = 0;
         console.log(current);
-        if(current == 5){
+        if(current == 3){
             $.mobile.loading('show');
             $.post(link_rank,1,function(data){
                 $.mobile.loading('hide');
@@ -183,8 +183,8 @@ $(function () {
             return false;
         }
         clearInterval(timer);
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
         timer = setInterval(function(){
             timeNum--;
             time_content.html(timeNum+' s');
@@ -211,8 +211,8 @@ $(function () {
         });
     });
     $('.ok').on('click',function(){
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
         $.mobile.changePage('#beginPage',{
             transition:'flow'
         });
@@ -221,7 +221,7 @@ $(function () {
         $.mobile.changePage('#backPage',{
             transition:'flow'
         });
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
     });
 });
