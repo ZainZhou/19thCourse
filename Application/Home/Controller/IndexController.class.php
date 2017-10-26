@@ -69,7 +69,6 @@ class IndexController extends BaseController {
             $currentData['current'] = 0;
             $currentData['today_group_count'] = 0;
 //            $currentData['today_learn_id'] = json_encode(array());
-//todo 全部学完重置
         }
 
         //检查学习题目上限
@@ -79,18 +78,6 @@ class IndexController extends BaseController {
                 'error'  => '每天最多只能学两组课程'
             ));
         }
-
-        //返回退出时的题目
-//        if ($currentData['current'] != 0 && !$isNew) {
-//            $question = $questions->where(array('id' => $currentData['question_id']))->find();
-//            $this->ajaxReturn(array(
-//                'status' => 200,
-//                'data'   => array(
-//                    'question' => $question,
-//                    'current'  => $currentData['current']
-//                )
-//            ));
-//        }
 
         //请求新题目时检查时间是否满足
         if (time() - $currentData['time'] < 1) {
@@ -102,36 +89,26 @@ class IndexController extends BaseController {
 
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
 
-        if ($lesson_id != 0 && count($currentData['today_learn_id']) > 0) {
-           $lastId = $currentData['today_learn_id'][count($currentData['today_learn_id']) - 1];
-           var_dump($lastId, $lesson_id);
-           $a = $lastId % 3;
-           $can = false;
-           if ($lesson_id == $lastId-1) {
-               $can = true;
-           }
-           if ($lesson_id == $lastId || $lesson_id == $lastId+1) {
-               $can = true;
-               $lesson_id += 1;
-           }
-           if (!$can){
-               $lesson_id = ($lastId - $lastId%3)/3 + 1;
-               $this->ajaxReturn(array(
-                   'status' => 403,
-                   'data' => $lesson_id,
-                   'error'   => '您不能学习该课程'
-               ));
-           }
+        //检查是否依次学习, 可以学习学过的
+        if (!$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
+            if ($lesson_id != 0 && count($currentData['today_learn_id']) > 0) {
+                $lastId = $currentData['today_learn_id'][count($currentData['today_learn_id']) - 1];
+                $can = false;
+                if ($lesson_id == $lastId + 1) {
+                    $can = true;
+                }
+                if (!$can) {
+                    $lesson_id = ($lastId - $lastId % 3) / 3 + 1;
+                    $this->ajaxReturn(array(
+                        'status' => 403,
+                        'data' => $lesson_id,
+                        'error' => '您不能学习该课程'
+                    ));
+                }
+            }
         }
 
-//        if ($currentData['today_learn_id']) {
-//            $map['id'] = array('NOT IN', $currentData['today_learn_id']);
-//        }
-//        if (count($map) > 0) {
-//            $question = $questions->where($map)->order('rand()')->find();
-//        } else {
-//            $question = $questions->order('rand()')->find();
-//        }
+
         if ($lesson_id != 0) {
             $currentData['question_id'] = $lesson_id;
             $question = $questions->where(array('id' => $lesson_id))->find();
@@ -139,22 +116,31 @@ class IndexController extends BaseController {
             $currentData['question_id'] = $currentData['question_id'] + 1;
             $question = $questions->where(array('id' => $currentData['question_id']))->find();
         }
-        if (!$this->isIdLearn($question['id'], $currentData['today_learn_id'])) {
+        //检查学习次数, 并给出分数系数和是否加入today_learn_id, 杨老板这个价格不值得我优化, 优化思路很简单, 设计一个存储lesson_id和次数的数据结构
+        $num = $this->checkLearnTimes($question['id'], $currentData['today_learn_id']);
+        if ($num < 2) {
             array_push($currentData['today_learn_id'], $question['id']);
         }
+        $k = 2 - $num < 0 ? 0 : 2 - $num;
+        $k = $k/2;
+
         $currentData['today_learn_id'] = json_encode($currentData['today_learn_id']);
         $currentData['current'] += 1;
         $current = $currentData['current'];
         if ($currentData['question_id'] != null && $currentData['question_id'] % 3 == 0 ) {
             $currentData['current'] = 0;
-            $currentData['today_group_count'] += 1;
+            if ($num == 0) {
+                $currentData['today_group_count'] += 1;
+            }
             $users = M('users');
             $user = $users->where(array('openid' => $openid))->find();
+            $user['score'] += $k*30;
             if ($currentData['today_group_count'] == 2) {
                 $user['days'] += 1;
-                //score作为时间, 时间越大排越后面
+                $user['score'] += 70;
+                //costtime作为时间, 时间越大排越后面
                 $spend = time() % (3600*24);
-                $user['score'] += $spend;
+                $user['costtime'] += $spend;
             }
             $user['count'] += 1;
             $users->where(array('openid' => $openid))->save($user);
@@ -177,7 +163,7 @@ class IndexController extends BaseController {
         $user = $users->where(array('openid' => $openid))->find();
         $map['score'] = array('GT', $user['score']);
         $model = new Model();
-        $row = $model->query("select * from (select *, (@rank := @rank + 1)rank from (select openid from users order by days desc, score asc)t, (select @rank := 0)a)b WHERE openid='$openid'");
+        $row = $model->query("select * from (select *, (@rank := @rank + 1)rank from (select openid from users order by socore desc, costtime asc)t, (select @rank := 0)a)b WHERE openid='$openid'");
         $rank = $row[0]['rank'];
 //        $list = $users->order('score desc')->field('nickname, imgurl, score')->limit(10)->select();
 //        if ($rank <= 50) {
@@ -215,7 +201,7 @@ class IndexController extends BaseController {
         $offset = $from - 1 >= 0 ? $from - 1:0;
         $limit = $to - $offset;
         $users = M('users');
-        $list = $users->order('days desc, score asc')->field('nickname, imgurl, score')->limit($offset, $limit)->select();
+        $list = $users->order('score desc, costtime asc')->field('nickname, imgurl, score')->limit($offset, $limit)->select();
         $rank = $from;
         foreach ($list as &$v) {
             unset($v['score']);
@@ -292,6 +278,15 @@ class IndexController extends BaseController {
             }
         }
         return false;
+    }
+    private function checkLearnTimes($id, $arr) {
+        $num = 0;
+        foreach ($arr as $v) {
+            if ($id == $v) {
+                $num++;
+            }
+        }
+        return $num;
     }
 
     private function delId($id, $arr) {
