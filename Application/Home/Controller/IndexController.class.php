@@ -163,7 +163,7 @@ class IndexController extends BaseController {
         $user = $users->where(array('openid' => $openid))->find();
         $map['score'] = array('GT', $user['score']);
         $model = new Model();
-        $row = $model->query("select * from (select *, (@rank := @rank + 1)rank from (select openid from users order by socore desc, costtime asc)t, (select @rank := 0)a)b WHERE openid='$openid'");
+        $row = $model->query("select * from (select *, (@rank := @rank + 1)rank from (select openid from users order by score desc, costtime asc)t, (select @rank := 0)a)b WHERE openid='$openid'");
         $rank = $row[0]['rank'];
 //        $list = $users->order('score desc')->field('nickname, imgurl, score')->limit(10)->select();
 //        if ($rank <= 50) {
