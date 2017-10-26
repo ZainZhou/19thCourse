@@ -22,26 +22,58 @@ body{
   height: 100%;
 }
 .overwarning{
-  position: absolute;
-  z-index: 1000000;
-  width: 60%;
-  height: 30%;
-  background: url("../images/warningv1.png")center no-repeat;
-  background-size: 100% 100%;
-  left: 20%;
-  top:30%;
-  .closeWarning{
-    float: right;
-    margin: 2%;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    text-align: center;
-    background: #ff7849;
-    border-radius: 50%;
-    color: #ffffff;
-  }
   display: none;
+  z-index: 100000;
+  position: absolute;
+  width: 76%;
+  height: 41.87%;
+  left: 12%;
+  top:25%;
+  background: url("../images/developer_back.png")center no-repeat;
+  background-size: 100% 100%;
+  border-radius: 26px;
+  box-shadow: 0 8px 8px #333;
+  .position_box{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .developer_title{
+    width: 78.94%;
+    float: left;
+    margin-left: 10.53%;
+    margin-top: -7.9%;
+  }
+  .closeP{
+    position: absolute;
+    top: 5%;
+    left: 86%;
+    background: #ffd145;
+    color: #fefff0;
+    font-size: 17px;
+    padding: 0.5%;
+    border:1px solid #fefff0;
+    border-radius: 50%;
+  }
+  .warning_img{
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+  }
+  p{
+    width: 80%;
+    font-size: 15px;
+    color: #faa180;
+    font-family: tx;
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+    display: none;
+    span{
+      font-family: tx;
+      color: #8bd9e1;
+    }
+  }
 }
 #beginPage,#backPage,#gamePage,#overPage,#listPage{
   position: relative;
@@ -150,7 +182,7 @@ body{
       margin: 0 auto;
     }
 
-    .listBtn{
+    .studyBtn{
       margin-bottom: 5%;
     }
   }
@@ -291,9 +323,9 @@ body{
       }
       .Qtitle{
         display: block;
-        width: 79%;
+        width: 80%;
         margin: 0 auto;
-        font-size: 14px;
+        font-size: 13px;
         color: #f98c33;
       }
     }

@@ -2,7 +2,7 @@
  * Created by hughes on 2017/3/4.
  */
 timer = null;
-timeNum = 5;
+timeNum = 7;
 nextFlag = 0;
 current = 1;
 $(function () {
@@ -17,34 +17,101 @@ $(function () {
     var myStudyBtn = $('.studyBtn');
     var replayBtn = $('.replayBtn');
     var day_num = $('.daynum');
-    var word_num = $('.wordnum');
     var rank_num = $('.ranknum');
     var nickname = $('.nickname');
     var user_avatar = $('.user_avatar');
     var ranks = $('.list_rank');
     var top3 = ranks.find('li');
+    var warning = $('.overwarning');
+    var ps = warning.find('p');
+    var select_wrong = $('.select_wrong');
+    var right_num = $('.right_num');
+    var over_learnt = $('.over_learnt');
+    var learn_completed = $('.learn_completed');
     var load_more = $('.load_more');
-    var f = 51;
-    load_more.on('click',function(){
+    var play_flag = 1;
+    var aCourseNum = $('.courseList > li');
+    var h_content = 0;
+    var content_box = $('.sentenceBox');
+    var startPos = 0;
+    var courseNum = $('.courseNum');
+    var over_flag = 0;
+    content_box[0].addEventListener('touchstart',function(e){
+        e.preventDefault();
+        var touch = e.touches[0];
+        startPos = touch.pageY;
+        h_content = q_content[0].offsetHeight - $(window).width()*0.6751;
+    });
+    content_box[0].addEventListener('touchmove',function(e){
+        e.preventDefault();
+        if(h_content < 0){
+            return false;
+        }
+        var touch = event.touches[0];
+        var y = (touch.pageY - startPos);
+        startTop = parseInt(q_content.css('top'));
+        if(startTop + y >= 0){
+            q_content.css('top',0);
+        }else if(startTop + y <= -h_content){
+            q_content.css('top',-h_content);
+        }else{
+            q_content.css('top',startTop+y);
+            startPos+=y;
+        }
+    });
+    aCourseNum.on('tap',function(){
+        if(!play_flag){
+            return false;
+        }
+        play_flag = 0;
+        clearInterval(timer);
+        time_content.html(7+' s');
+        timeNum = 7;
+        timer = setInterval(function(){
+            timeNum--;
+            time_content.html(timeNum+' s');
+            if (timeNum == 0){
+                nextFlag = 1;
+                clearInterval(timer);
+                time_content.html('下一个');
+            }
+        },1000);
         $.mobile.loading('show');
         var _data = {};
-        _data.from = f;
-        _data.to = f+9;
-        $.post(rank_link,_data,function(data){
-            $.mobile.loading('hide');
-            if(data.status == 200){
-                f += 10;
-                for(var i = 0 ; i < data.data.length ; i++){
-                    if(parseInt(data.data[i].rank)%2 != 0){
-                        ranks.append('<li style="background: #feebcb"> <img src="'+data.data[i].imgurl+'" alt="" class="list_avatar"> <span class="list_nickname">'+data.data[i].nickname+'</span> <span class="list_ranknum">'+data.data[i].rank+'</span> </li>');
-                    }else{
-                        ranks.append('<li> <img src="'+data.data[i].imgurl+'" alt="" class="list_avatar"> <span class="list_nickname">'+data.data[i].nickname+'</span> <span class="list_ranknum">'+data.data[i].rank+'</span> </li>');
-                    }
-                }
-            }else{
-                alert(data.status)
+        _data.lession_id = parseInt($(this).html());
+        $.post(question_link,_data,function(data) {
+            if (data.status == 200) {
+                q_title.html(data.data.question.title);
+                q_content.html(data.data.question.content);
+                courseNum.html(_data.lession_id);
+                current = data.data.current;
+                setTimeout(function () {
+                    $.mobile.loading('hide');
+                    $.mobile.changePage('#gamePage', {
+                        transition: 'flow'
+                    });
+                    play_flag = 1;
+                }, 200)
             }
-        })
+            else if (data.status == 405){
+                $.mobile.loading('hide');
+                warning.css('display','block');
+                mask.css('display','block');
+                right_num.html(data.data);
+                select_wrong.css('display','block');
+                play_flag = 1;
+            }else if(data.status == 403){
+                $.mobile.loading('hide');
+                warning.css('display','block');
+                mask.css('display','block');
+                over_learnt.css('display','block');
+                play_flag = 1;
+            }
+            else{
+                alert(data.error);
+                play_flag = 1;
+            }
+        });
     });
     replayBtn.on('click',function(){
         $.mobile.changePage('#backPage',{
@@ -52,6 +119,18 @@ $(function () {
         });
     });
     myStudyBtn.on('click',function(){
+        $.mobile.loading('show');
+        $.post(link_rank,"",function(data){
+            if(data.status == 200){
+                $.mobile.loading('hide');
+                user_avatar.attr('src',data.data.avatar);
+                nickname.html(data.data.nickname);
+                rank_num.html(data.data.rank);
+                day_num.html(data.data.groups);
+            }else{
+                alert(data.info);
+            }
+        });
         $.mobile.changePage('#overPage',{
             transition:'flow'
         });
@@ -68,6 +147,14 @@ $(function () {
     close_developer.on('click',function(){
         mask.css('display','none');
         developer_list.css('display','none');
+        warning.css('display','none');
+        ps.css('display','none');
+        if(over_flag){
+            $.mobile.changePage('#backPage',{
+                transition: 'flow'
+            });
+            over_flag = 0;
+        }
     });
     $('.listBtn').on('click',function(){
         $.mobile.loading('show');
@@ -77,8 +164,7 @@ $(function () {
                 user_avatar.attr('src',data.data.avatar);
                 nickname.html(data.data.nickname);
                 rank_num.html(data.data.rank);
-                word_num.html(data.data.groups);
-                day_num.html(data.data.days);
+                day_num.html(data.data.groups);
             }else{
                 alert(data.info);
             }
@@ -118,73 +204,23 @@ $(function () {
         $('.overwarning').css('display','none');
         $('.mask').css('display','none');
     });
-    $('.playBtn').on('click',function(){
-        clearInterval(timer);
-        time_content.html(5+' s');
-        timeNum = 5;
-        timer = setInterval(function(){
-            timeNum--;
-            time_content.html(timeNum+' s');
-            if (timeNum == 0){
-                nextFlag = 1;
-                clearInterval(timer);
-                time_content.html('下一个');
-            }
-        },1000);
-        $.mobile.loading('show');
-        $.post(question_link,1,function(data) {
-            if (data.status == 200) {
-                q_title.html(data.data.question.title);
-                q_content.html(data.data.question.content);
-                current = data.data.current;
-                setTimeout(function () {
-                    $.mobile.loading('hide');
-                    $.mobile.changePage('#gamePage', {
-                        transition: 'flow'
-                    });
-                }, 200)
-            }
-            else if (data.status == 403){
-                $.mobile.loading('hide');
-                $('.overwarning').css('display','block');
-                $('.mask').css('display','block');
-            }else{
-                alert(data.error);
-            }
-        });
-    });
-
     next_question.on('click',function(){
         if (nextFlag == 0){
             return false;
         }
         nextFlag = 0;
         console.log(current);
-        if(current == 5){
-            $.mobile.loading('show');
-            $.post(link_rank,1,function(data){
-                $.mobile.loading('hide');
-                if(data.status == 200){
-                    user_avatar.attr('src',data.data.avatar);
-                    nickname.html(data.data.nickname);
-                    rank_num.html(data.data.rank);
-                    word_num.html(data.data.groups);
-                    day_num.html(data.data.days);
-                    $.mobile.changePage('#overPage',{
-                        transition:'flow'
-                    });
-                    current = 0;
-                    //shareDesc = '我正在参加 “团团打卡 学讲话” 特训，打卡第'+data.data.days+'天，排第'+data.data.rank+'名，明天继续！你也加入吧'
-                    //initShare(shareTitle, shareDesc, shareURL, shareImg);
-                }else {
-                    alert(data.error);
-                }
-            });
+        if(current == 3){
+            learn_completed.css('display','block');
+            warning.css('display','block');
+            mask.css('display','block');
+            over_flag = 1;
+            nextFlag = 1;
             return false;
         }
         clearInterval(timer);
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
         timer = setInterval(function(){
             timeNum--;
             time_content.html(timeNum+' s');
@@ -211,17 +247,10 @@ $(function () {
         });
     });
     $('.ok').on('click',function(){
-        time_content.html(5+' s');
-        timeNum = 5;
+        time_content.html(7+' s');
+        timeNum = 7;
         $.mobile.changePage('#beginPage',{
             transition:'flow'
         });
-    });
-    $('.replay').on('click',function(){
-        $.mobile.changePage('#backPage',{
-            transition:'flow'
-        });
-        time_content.html(5+' s');
-        timeNum = 5;
     });
 });
