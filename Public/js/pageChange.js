@@ -22,6 +22,12 @@ $(function () {
     var user_avatar = $('.user_avatar');
     var ranks = $('.list_rank');
     var top3 = ranks.find('li');
+    var warning = $('.overwarning');
+    var ps = warning.find('p');
+    var select_wrong = $('.select_wrong');
+    var right_num = $('.right_num');
+    var over_learnt = $('.over_learnt');
+    var learn_completed = $('.learn_completed');
     var load_more = $('.load_more');
     var play_flag = 1;
     var aCourseNum = $('.courseList > li');
@@ -29,6 +35,7 @@ $(function () {
     var content_box = $('.sentenceBox');
     var startPos = 0;
     var courseNum = $('.courseNum');
+    var over_flag = 0;
     content_box[0].addEventListener('touchstart',function(e){
         e.preventDefault();
         var touch = e.touches[0];
@@ -86,12 +93,21 @@ $(function () {
                     play_flag = 1;
                 }, 200)
             }
-            else if (data.status == 403){
+            else if (data.status == 405){
                 $.mobile.loading('hide');
-                $('.overwarning').css('display','block');
-                $('.mask').css('display','block');
+                warning.css('display','block');
+                mask.css('display','block');
+                right_num.html(data.data);
+                select_wrong.css('display','block');
                 play_flag = 1;
-            }else{
+            }else if(data.status == 403){
+                $.mobile.loading('hide');
+                warning.css('display','block');
+                mask.css('display','block');
+                over_learnt.css('display','block');
+                play_flag = 1;
+            }
+            else{
                 alert(data.error);
                 play_flag = 1;
             }
@@ -103,6 +119,18 @@ $(function () {
         });
     });
     myStudyBtn.on('click',function(){
+        $.mobile.loading('show');
+        $.post(link_rank,"",function(data){
+            if(data.status == 200){
+                $.mobile.loading('hide');
+                user_avatar.attr('src',data.data.avatar);
+                nickname.html(data.data.nickname);
+                rank_num.html(data.data.rank);
+                day_num.html(data.data.groups);
+            }else{
+                alert(data.info);
+            }
+        });
         $.mobile.changePage('#overPage',{
             transition:'flow'
         });
@@ -119,6 +147,14 @@ $(function () {
     close_developer.on('click',function(){
         mask.css('display','none');
         developer_list.css('display','none');
+        warning.css('display','none');
+        ps.css('display','none');
+        if(over_flag){
+            $.mobile.changePage('#backPage',{
+                transition: 'flow'
+            });
+            over_flag = 0;
+        }
     });
     $('.listBtn').on('click',function(){
         $.mobile.loading('show');
@@ -175,8 +211,10 @@ $(function () {
         nextFlag = 0;
         console.log(current);
         if(current == 3){
-            $('.overwarning').css('display','block');
-            $('.mask').css('display','block');
+            learn_completed.css('display','block');
+            warning.css('display','block');
+            mask.css('display','block');
+            over_flag = 1;
             nextFlag = 1;
             return false;
         }
