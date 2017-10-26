@@ -151,7 +151,7 @@ body {
   width: 100%;
   text-align: center;
   position: relative;
-  top: -6px;
+  top: -8px;
   color: #f69c4a;
 }
 #backPage .copyright {
@@ -498,5 +498,8 @@ body {
   }
   #gamePage .questionContainer .conversation div {
     font-size: 11px;
+  }
+  .overwarning .warning_img {
+    width: 42%;
   }
 }
