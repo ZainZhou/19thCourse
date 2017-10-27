@@ -242,7 +242,7 @@ $(function () {
                 q_content.html(data.data.question.content);
                 current = data.data.current;
             }else{
-                console.log(data.info);
+                console.log(data.error);
             }
         });
     });
