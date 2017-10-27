@@ -152,7 +152,7 @@ $(function () {
        $.mobile.loading('show');
        var _data = {};
        _data.lession_id = 77;
-       $.post(question_link,_data,function(data){
+       $.post(learned_link,_data,function(data){
            $.mobile.loading('hide');
            if(data.status == 200){
                aCourseNum.css('background-color','#f59a4e');

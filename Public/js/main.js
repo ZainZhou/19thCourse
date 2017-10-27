@@ -8,6 +8,7 @@ $(document).on("pageshow","#listPage",function(){
     $('.beginImg').removeClass('pulse');
 });
 var question_link = "/19thCourse/index.php/Home/Index/questions";
+var learned_link = "/19thCourse/index.php/Home/Index/learned";
 var rank_link = "/19thCourse/index.php/Home/Index/morerank";
 var link_rank = "/19thCourse/index.php/Home/Index/rank";
 function loadImgs(b, g) {

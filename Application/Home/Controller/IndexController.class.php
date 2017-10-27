@@ -53,9 +53,25 @@ class IndexController extends BaseController {
             'data'  => $data
         ));
     }
-
+    public function learned() {
+        $openid = session('openid');
+        $userCurrent = M('user_current_question');
+        $currentData = $userCurrent->where(array('openid' => $openid))->find();
+        $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
+        if(count($currentData['today_learn_id']) == 0) {
+            $lesson_id = 0;
+        } else {
+            $lastId = $currentData['today_learn_id'][count($currentData['today_learn_id']) - 1];
+            $lesson_id = ($lastId - $lastId % 3) / 3 + 1;
+            $lesson_id = $lesson_id == 78 ? 77 : $lesson_id;
+        }
+        $this->ajaxReturn(array(
+            'status' => 405,
+            'data' => $lesson_id,
+            'error' => '您不能学习该课程'
+        ));
+    }
     public function questions() {
-//        $isNew = I('post.new') == 'true' ? true : false;
         $lesson_id = I('post.lession_id', 0);
         $lesson_id = $lesson_id == 0 ? 0 : ($lesson_id - 1) * 3 + 1;
         $openid = session('openid');
@@ -68,11 +84,10 @@ class IndexController extends BaseController {
             $currentData['time'] = 0;
             $currentData['current'] = 0;
             $currentData['today_group_count'] = 0;
-//            $currentData['today_learn_id'] = json_encode(array());
         }
 
         //检查学习题目上限
-        if ($currentData['today_group_count'] == 2) {
+        if ($currentData['today_group_count'] == 2 && !$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
             $this->ajaxReturn(array(
                 'status' => 403,
                 'error'  => '每天最多只能学两组课程'
@@ -88,7 +103,6 @@ class IndexController extends BaseController {
         }
 
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
-
         //检查是否依次学习, 可以学习学过的
         if (!$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
             if ($lesson_id != 0 && count($currentData['today_learn_id']) > 0) {
@@ -99,6 +113,7 @@ class IndexController extends BaseController {
                 }
                 if (!$can) {
                     $lesson_id = ($lastId - $lastId % 3) / 3 + 1;
+                    $lesson_id = $lesson_id == 78 ? 77 : $lesson_id;
                     $this->ajaxReturn(array(
                         'status' => 405,
                         'data' => $lesson_id,
@@ -106,13 +121,13 @@ class IndexController extends BaseController {
                     ));
                 }
             } else {
-                if ($lesson_id > 1 && count($currentData['today_learn_id']) > 0) {
-                 $this->ajaxReturn(array(
+                if ($lesson_id > 1 && count($currentData['today_learn_id']) == 0) {
+                    $this->ajaxReturn(array(
                         'status' => 405,
                         'data' => 1,
                         'error' => '您不能学习该课程'
-                 ));
-                }  
+                    ));
+                }
             }
         }
 
@@ -129,7 +144,7 @@ class IndexController extends BaseController {
         if ($num < 2) {
             array_push($currentData['today_learn_id'], $question['id']);
         }
-        $k = 2 - $num < 0 ? 0 : 2 - $num;
+        $k = 2 - $num < 0 ? 0.1 : 2 - $num;
         $k = $k/2;
 
         $currentData['today_learn_id'] = json_encode($currentData['today_learn_id']);
