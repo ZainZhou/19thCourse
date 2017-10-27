@@ -105,6 +105,12 @@ class IndexController extends BaseController {
                         'error' => '您不能学习该课程'
                     ));
                 }
+            } else {
+                 $this->ajaxReturn(array(
+                        'status' => 405,
+                        'data' => 1,
+                        'error' => '您不能学习该课程'
+                 ));
             }
         }
 
