@@ -176,10 +176,22 @@ $(function () {
         warning.css('display','none');
         ps.css('display','none');
         if(over_flag){
-            $.mobile.changePage('#backPage',{
-                transition: 'flow'
+            $.mobile.loading('show');
+            var _data = {};
+            _data.lession_id = 77;
+            $.post(learned_link,_data,function(data){
+                $.mobile.loading('hide');
+                if(data.status == 200){
+                    aCourseNum.css('background-color','#f59a4e');
+                }else if(data.status == 405){
+                    for(var i = 0 ; i < data.data ; i++){
+                        aCourseNum.eq(i).css('background-color','#f59a4e');
+                    }
+                }
+                $.mobile.changePage('#backPage',{
+                    transition:'flow'
+                });
             });
-            over_flag = 0;
         }
     });
     $('.listBtn').on('click',function(){
