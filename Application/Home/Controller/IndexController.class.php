@@ -56,7 +56,7 @@ class IndexController extends BaseController {
 
     public function questions() {
 //        $isNew = I('post.new') == 'true' ? true : false;
-        $lesson_id = I('post.lesson_id', 0);
+        $lesson_id = I('post.lession_id', 0);
         $lesson_id = $lesson_id == 0 ? 0 : ($lesson_id - 1) * 3 + 1;
         $openid = session('openid');
         $questions = M('questions');
