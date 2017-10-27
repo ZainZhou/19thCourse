@@ -120,10 +120,10 @@ $(function () {
         $.post(question_link,_data,function(data){
             $.mobile.loading('hide');
             if(data.status == 200){
-                aCourseNum.css('background-color','#39f07e');
+                aCourseNum.css('background-color','#f59a4e');
             }else if(data.status == 405){
                 for(var i = 0 ; i < data.data ; i++){
-                    aCourseNum.eq(i).css('background-color','#39f07e');
+                    aCourseNum.eq(i).css('background-color','#f59a4e');
                 }
             }
             $.mobile.changePage('#backPage',{
@@ -155,10 +155,10 @@ $(function () {
        $.post(question_link,_data,function(data){
            $.mobile.loading('hide');
            if(data.status == 200){
-               aCourseNum.css('background-color','#39f07e');
+               aCourseNum.css('background-color','#f59a4e');
            }else if(data.status == 405){
                for(var i = 0 ; i < data.data ; i++){
-                   aCourseNum.eq(i).css('background-color','#39f07e');
+                   aCourseNum.eq(i).css('background-color','#f59a4e');
                }
            }
            $.mobile.changePage('#backPage',{
