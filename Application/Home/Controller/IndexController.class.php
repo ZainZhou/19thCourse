@@ -125,7 +125,7 @@ class IndexController extends BaseController {
         $k = $k/2;
 
         $currentData['today_learn_id'] = json_encode($currentData['today_learn_id']);
-        $currentData['current'] += 1;
+        $currentData['current'] = $question['id']%3 == 0 ? 3:$question['id']%3;
         $current = $currentData['current'];
         if ($currentData['question_id'] != null && $currentData['question_id'] % 3 == 0 ) {
             $currentData['current'] = 0;
