@@ -210,6 +210,7 @@ $(function () {
         var _data = {};
         _data.from = 1;
         _data.to = 50;
+        $.mobile.loading('show');
         $.post(rank_link,_data,function(data){
             $.mobile.loading('hide');
             if(data.status == 200){
