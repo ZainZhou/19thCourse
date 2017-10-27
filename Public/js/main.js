@@ -16,9 +16,9 @@ function loadImgs(b, g) {
     for (var e = 0; e < b.length; e++) {
         var h = new Image();
         if(b[e] == 'startPage_back'){
-            h.src = "/19th/Public/images/" + b[e] +".jpg";
+            h.src = "/19thCourse/Public/images/" + b[e] +".jpg";
         }else{
-            h.src = "/19th/Public/images/" + b[e] +".png";
+            h.src = "/19thCourse/Public/images/" + b[e] +".png";
         }
         var c = b[e].split(".")[0];
         h.onload = function () {
@@ -41,7 +41,7 @@ function showPage(){
 }
 $(function(){
     $.mobile.loading('show');
-    var Imgs = ['VoiceofYoung','background_title','card_title','copper','developer_back','developer_title','list_title','silver','studyBtn','background_back','beginXi','content_back','cup','developer_btn','gold','orange_btn','startPage_back','yellow_btn'];
+    var Imgs = ['VoiceofYoung','background_title','card_title','copper','developer_back','developer_title','list_title','silver','studyBtn','background_back','beginXi','content_back','cup','developer_btn','gold','orange_btn','startPage_back','yellow_btn','courseNum','warning_img','warning_title'];
     loadImgs(Imgs,showPage);
     var touchBar = $('.courseList');
     var touchBox = $('.touchBar');
