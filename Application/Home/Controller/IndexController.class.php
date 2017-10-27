@@ -106,7 +106,7 @@ class IndexController extends BaseController {
                     ));
                 }
             } else {
-                if ($lesson_id != 1) {
+                if ($lesson_id > 1) {
                  $this->ajaxReturn(array(
                         'status' => 405,
                         'data' => 1,
