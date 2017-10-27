@@ -58,6 +58,7 @@ class IndexController extends BaseController {
         $userCurrent = M('user_current_question');
         $currentData = $userCurrent->where(array('openid' => $openid))->find();
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
+        sort($currentData['today_learn_id']);
         if(count($currentData['today_learn_id']) == 0) {
             $lesson_id = 0;
         } else {
@@ -87,7 +88,7 @@ class IndexController extends BaseController {
             $currentData['today_group_count'] = 0;
         }
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
-
+        sort($currentData['today_learn_id']);
         //检查学习题目上限
         if ($currentData['today_group_count'] == 2 && !$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
             $this->ajaxReturn(array(
@@ -145,8 +146,8 @@ class IndexController extends BaseController {
         if ($num < 2) {
             array_push($currentData['today_learn_id'], $question['id']);
         }
-        $k = 2 - $num < 0 ? 0.1 : 2 - $num;
-        $k = $k/2;
+        $k = 2 - $num < 0 ? 0.2 : 2 - $num;
+        $k = $k/2 ;
 
         $currentData['today_learn_id'] = json_encode($currentData['today_learn_id']);
         $currentData['current'] = $question['id']%3 == 0 ? 3:$question['id']%3;
