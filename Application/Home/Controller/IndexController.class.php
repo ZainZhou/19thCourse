@@ -106,11 +106,13 @@ class IndexController extends BaseController {
                     ));
                 }
             } else {
+                if ($lesson_id != 1) {
                  $this->ajaxReturn(array(
                         'status' => 405,
                         'data' => 1,
                         'error' => '您不能学习该课程'
                  ));
+                }  
             }
         }
 
