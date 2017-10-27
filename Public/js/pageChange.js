@@ -114,8 +114,21 @@ $(function () {
         });
     });
     replayBtn.on('click',function(){
-        $.mobile.changePage('#backPage',{
-            transition:'flow'
+        $.mobile.loading('show');
+        var _data = {};
+        _data.lession_id = 77;
+        $.post(question_link,_data,function(data){
+            $.mobile.loading('hide');
+            if(data.status == 200){
+                aCourseNum.css('background-color','#39f07e');
+            }else if(data.status == 405){
+                for(var i = 0 ; i < data.data ; i++){
+                    aCourseNum.eq(i).css('background-color','#39f07e');
+                }
+            }
+            $.mobile.changePage('#backPage',{
+                transition:'flow'
+            });
         });
     });
     myStudyBtn.on('click',function(){
@@ -136,9 +149,22 @@ $(function () {
         });
     });
    $('.startBtn').on('click',function(){
-        $.mobile.changePage('#backPage',{
-            transition:'flow'
-        });
+       $.mobile.loading('show');
+       var _data = {};
+       _data.lession_id = 77;
+       $.post(question_link,_data,function(data){
+           $.mobile.loading('hide');
+           if(data.status == 200){
+               aCourseNum.css('background-color','#39f07e');
+           }else if(data.status == 405){
+               for(var i = 0 ; i < data.data ; i++){
+                   aCourseNum.eq(i).css('background-color','#39f07e');
+               }
+           }
+           $.mobile.changePage('#backPage',{
+               transition:'flow'
+           });
+       });
     });
     $('.Qc').on('click',function(){
         mask.css('display','block');
