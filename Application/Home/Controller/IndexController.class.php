@@ -62,7 +62,8 @@ class IndexController extends BaseController {
             $lesson_id = 0;
         } else {
             $lastId = $currentData['today_learn_id'][count($currentData['today_learn_id']) - 1];
-            $lesson_id = ($lastId - $lastId % 3) / 3 + 1;
+            $lesson_id = ($lastId - $lastId % 3) / 3;
+//            $lesson_id = $lastId%3 == 0 ? $lesson_id:$lesson_id;
             $lesson_id = $lesson_id == 78 ? 77 : $lesson_id;
         }
         $this->ajaxReturn(array(
@@ -85,6 +86,7 @@ class IndexController extends BaseController {
             $currentData['current'] = 0;
             $currentData['today_group_count'] = 0;
         }
+        $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
 
         //检查学习题目上限
         if ($currentData['today_group_count'] == 2 && !$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
@@ -102,7 +104,6 @@ class IndexController extends BaseController {
             ));
         }
 
-        $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
         //检查是否依次学习, 可以学习学过的
         if (!$this->isIdLearn($lesson_id, $currentData['today_learn_id'])) {
             if ($lesson_id != 0 && count($currentData['today_learn_id']) > 0) {
