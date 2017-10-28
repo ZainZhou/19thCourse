@@ -321,7 +321,8 @@ body {
   margin-top: 10px;
 }
 #gamePage .questionContainer .conversation .sentenceBox .sentences {
-  font-size: 11px;
+  font-size: 13px;
+  line-height: 20px;
   position: absolute;
   top: 0;
 }
@@ -329,7 +330,9 @@ body {
   display: block;
   width: 80%;
   margin: 0 auto;
-  font-size: 13px;
+  font-size: 15px;
+  text-align: center;
+  font-weight: 800;
   color: #f98c33;
 }
 #gamePage .nextBtn {
