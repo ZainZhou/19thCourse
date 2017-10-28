@@ -63,6 +63,7 @@ $(function () {
         if(!play_flag){
             return false;
         }
+        q_content.css('top',0);
         play_flag = 0;
         clearInterval(timer);
         time_content.html(7+' s');
@@ -247,6 +248,7 @@ $(function () {
         if (nextFlag == 0){
             return false;
         }
+        q_content.css('top',0);
         nextFlag = 0;
         console.log(current);
         if(current == 3){

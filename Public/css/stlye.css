@@ -282,8 +282,7 @@ body {
   top: -6px;
 }
 #gamePage .swipe_tips {
-  position: fixed;
-  top: 76.5%;
+  top: 7px;
   width: 100%;
 }
 #gamePage .courseNum {
