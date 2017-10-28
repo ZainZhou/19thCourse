@@ -40,7 +40,7 @@ $(function () {
         e.preventDefault();
         var touch = e.touches[0];
         startPos = touch.pageY;
-        h_content = q_content[0].offsetHeight - $(window).width()*0.6751;
+        h_content = q_content[0].offsetHeight - $(window).width()*0.645;
     });
     content_box[0].addEventListener('touchmove',function(e){
         e.preventDefault();
