@@ -199,9 +199,9 @@ class IndexController extends BaseController {
 //                $rank = $key+1;
 //            }
 //        }
-        if ($user['days'] == 0) {
-            $rank = '∞';
-        }
+//        if ($user['days'] == 0) {
+//            $rank = '∞';
+//        }
         $this->ajaxReturn(array(
             'status' => 200,
             'data'   => array(
