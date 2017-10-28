@@ -282,7 +282,9 @@ body {
   top: -6px;
 }
 #gamePage .swipe_tips {
-  margin-top: 6px;
+  position: fixed;
+  top: 76.5%;
+  width: 100%;
 }
 #gamePage .courseNum {
   background: url("../images/courseNum.png") no-repeat center;
