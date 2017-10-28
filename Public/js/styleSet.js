@@ -12,5 +12,5 @@ $(function(){
     $(document).on("pagebeforeshow","#gamePage",function(){
         content_back.css('height',w*0.95);
     });
-    $('.sentenceBox').css({'height':w*0.645});
+    $('.sentenceBox').css({'height':w*0.65});
 });
