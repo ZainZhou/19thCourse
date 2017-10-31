@@ -90,10 +90,10 @@ class IndexController extends BaseController {
         $currentData['today_learn_id'] = json_decode($currentData['today_learn_id']);
         sort($currentData['today_learn_id']);
         //检查学习题目上限
-        if ($currentData['today_group_count'] == 2 && !$this->isIdLearn($lesson_id, $currentData['today_learn_id']) && $lesson_id != 0) {
+        if ($currentData['today_group_count'] == 3 && !$this->isIdLearn($lesson_id, $currentData['today_learn_id']) && $lesson_id != 0) {
             $this->ajaxReturn(array(
                     'status' => 403,
-                    'error' => '每天最多只能学两组课程',
+                    'error' => '每天最多只能学三组课程',
                 )
             );
         }
@@ -161,7 +161,7 @@ class IndexController extends BaseController {
             $users = M('users');
             $user = $users->where(array('openid' => $openid))->find();
             $user['score'] += $k*30;
-            if ($currentData['today_group_count'] == 2) {
+            if ($currentData['today_group_count'] == 3) {
                 $user['days'] += 1;
                 $user['score'] += 70;
                 //costtime作为时间, 时间越大排越后面
